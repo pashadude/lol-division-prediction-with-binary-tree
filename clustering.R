@@ -1,0 +1,15 @@
+library(cluster)
+library(psych)
+data1 <- read.csv("/home/proveyourskillz/Desktop/userdata.csv", header=T, row.names=1)
+data.p <- as.matrix(data1)
+n <- ((dim(data.p)[1])/15)
+kdata <- na.omit(data.p) 
+fit <- kmeans(kdata, n, iter.max=50, nstart=10)
+aggregate(kdata, by=list(fit$cluster), FUN=mean)
+clust.out <- fit$cluster
+kclust <- as.matrix(clust.out)
+kclust.out <- cbind(kclust, data1)
+write.table(kclust.out, file="/home/proveyourskillz/Desktop/kmeans_out.csv", sep=",")
+par(ask=TRUE)
+data.p2 <- prop.table(data.p,1)*100
+clusplot(data.p2, fit$cluster, shade=F, labels=2, lines=0, color=T, lty=4, main='Principal Components plot showing K-means clusters')
